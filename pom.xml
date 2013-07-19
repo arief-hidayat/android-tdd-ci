@@ -18,37 +18,53 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <android-plugin.version>3.1.1</android-plugin.version>
-        <compiler-plugin.version>2.3.2</compiler-plugin.version>
-        <surefire-plugin.version>2.9</surefire-plugin.version>
-        <enforcer-plugin.version>1.0.1</enforcer-plugin.version>
-        <release-plugin.version>2.2.1</release-plugin.version>
+        <android-plugin.version>3.6.0</android-plugin.version>
+        <compiler-plugin.version>3.1</compiler-plugin.version>
+        <surefire-plugin.version>2.15</surefire-plugin.version>
+        <enforcer-plugin.version>1.3</enforcer-plugin.version>
+        <release-plugin.version>2.4.1</release-plugin.version>
         <jarsigner-plugin.version>1.2</jarsigner-plugin.version>
         <proguard-plugin.version>2.0.4</proguard-plugin.version>
 
-        <android.version>2.3.3</android.version>
+        <!-- installed the version using https://github.com/mosabua/maven-android-sdk-deployer/ if it's not available in maven repo.
+        note that the groupid is android instead of org.google.android
+        -->
+        <android.version>4.2.2_r2</android.version>
+        <android.gmap.version>17_r2</android.gmap.version>
         <proguard.version>4.4</proguard.version>
 
         <commons-lang.version>2.6</commons-lang.version>
-        <spring-android.version>1.0.0.RC1</spring-android.version>
-        <jackson.version>1.8.5</jackson.version>
+        <spring-android.version>1.0.1.RELEASE</spring-android.version>
+        <jackson.version>1.9.12</jackson.version>
         <roboguice.version>1.1.3</roboguice.version>
-
-        <hamcrest.version>1.1</hamcrest.version>
-        <jmock.version>2.5.1</jmock.version>
-        <robotium.version>3.1</robotium.version>
-        <testng.version>6.2.1</testng.version>
+        <hamcrest.version>1.3</hamcrest.version>
+        <jmock.version>2.6.0</jmock.version>
+        <robotium.version>4.2</robotium.version>
+        <testng.version>6.8.5</testng.version>
         <junit4.version>4.8.2</junit4.version>
-        <robolectric.version>1.0</robolectric.version>
+        <robolectric.version>1.2</robolectric.version>
 
-        <android.sdk.platform>7</android.sdk.platform>
+        <android.sdk.platform>16</android.sdk.platform>
         <android.device>emulator</android.device>
+
     </properties>
 
+    <!-- issue:https://groups.google.com/forum/#!topic/robolectric/fyOxX76ZTQ0 -->
+
+    <!-- TODO: looks like must manually install hamcrest with classifier: android
+    repackage . need to remove licence.txt first.
+    mvn install:install-file -Dfile=C:/Users/arief/Downloads/hamcrest-core-1.3.jar -DartifactId=hamcrest-core -DgroupId=org.hamcrest -Dclassifier=android -Dversion=1.3 -Dpackaging=jar
+    mvn install:install-file -Dfile=C:/Users/arief/Downloads/hamcrest-library-1.3.jar -DartifactId=hamcrest-library -DgroupId=org.hamcrest -Dclassifier=android -Dversion=1.3 -Dpackaging=jar
+    mvn install:install-file -Dfile=C:/Users/arief/Downloads/hamcrest-integration-1.3.jar -DartifactId=hamcrest-integration -DgroupId=org.hamcrest -Dclassifier=android -Dversion=1.3 -Dpackaging=jar
+     -->
     <repositories>
+        <!--<repository>-->
+            <!--<id>org.springframework.maven.milestone</id>-->
+            <!--<url>http://maven.springframework.org/milestone</url>-->
+        <!--</repository>-->
         <repository>
-            <id>org.springframework.maven.milestone</id>
-            <url>http://maven.springframework.org/milestone</url>
+            <id>org.maven.repo1</id>
+            <url>http://repo1.maven.org/maven2/</url>
         </repository>
         <repository>
             <id>com.googlecode.android-rome-feed-reader.releases</id>
@@ -67,12 +83,35 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- attempt to put robolectric before android to fix java.lang.RuntimeException: Stub!-->
             <dependency>
-                <groupId>com.google.android</groupId>
+                <groupId>com.pivotallabs</groupId>
+                <artifactId>robolectric</artifactId>
+                <version>${robolectric.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <!-- https://github.com/mosabua/maven-android-sdk-deployer/ to fix Warning: an error occurred while binding shadow class -->
+                <!--<groupId>com.google.android</groupId>-->
+                <groupId>android</groupId>
                 <artifactId>android</artifactId>
                 <version>${android.version}</version>
                 <scope>provided</scope>
             </dependency>
+
+            <dependency>
+                <groupId>android.test.uiautomator</groupId>
+                <artifactId>uiautomator</artifactId>
+                <version>${android.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.android.maps</groupId>
+                <artifactId>maps</artifactId>
+                <version>${android.gmap.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
@@ -95,12 +134,13 @@
             </dependency>
 
             <!-- test support -->
-            <dependency>
-                <groupId>com.google.android</groupId>
-                <artifactId>android-test</artifactId>
-                <version>${android.version}</version>
-                <scope>provided</scope>
-            </dependency>
+            <!-- if using android sdk deployer, it has been included in android:android-->
+            <!--<dependency>-->
+                <!--<groupId>com.google.android</groupId>-->
+                <!--<artifactId>android-test</artifactId>-->
+                <!--<version>${android.version}</version>-->
+                <!--<scope>provided</scope>-->
+            <!--</dependency>-->
             <dependency>
                 <groupId>org.jmock</groupId>
                 <artifactId>jmock</artifactId>
@@ -127,23 +167,29 @@
                 <artifactId>hamcrest-library</artifactId>
                 <version>${hamcrest.version}</version>
                 <classifier>android</classifier>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hamcrest</groupId>
+                        <artifactId>hamcrest-core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-integration</artifactId>
                 <version>${hamcrest.version}</version>
                 <classifier>android</classifier>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hamcrest</groupId>
+                        <artifactId>hamcrest-library</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.jayway.android.robotium</groupId>
                 <artifactId>robotium-solo</artifactId>
                 <version>${robotium.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.pivotallabs</groupId>
-                <artifactId>robolectric</artifactId>
-                <version>${robolectric.version}</version>
-                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.testng</groupId>
@@ -170,7 +216,7 @@
                         <sdk>
                             <platform>${android.sdk.platform}</platform>
                         </sdk>
-                        <deleteConflictingFiles>true</deleteConflictingFiles>
+                        <!--TODO : <deleteConflictingFiles>true</deleteConflictingFiles>-->
                         <undeployBeforeDeploy>true</undeployBeforeDeploy>
                     </configuration>
                 </plugin>

@@ -24,8 +24,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.google.android</groupId>
+            <!-- https://github.com/mosabua/maven-android-sdk-deployer/ to fix Warning: an error occurred while binding shadow class -->
+            <!--<groupId>com.google.android</groupId>-->
+            <groupId>android</groupId>
             <artifactId>android</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android.maps</groupId>
+            <artifactId>maps</artifactId>
         </dependency>
         <dependency>
             <groupId>es.osoco</groupId>
@@ -43,10 +49,11 @@
         </dependency>
 
         <!-- test support -->
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>android-test</artifactId>
-        </dependency>
+        <!-- if using android sdk deployer, it has been included in android:android-->
+        <!--<dependency>-->
+            <!--<groupId>com.google.android</groupId>-->
+            <!--<artifactId>android-test</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.jmock</groupId>
             <artifactId>jmock</artifactId>

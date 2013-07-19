@@ -16,9 +16,34 @@
     <name>Chirp - application</name>
 
     <dependencies>
+
+        <!-- attempt to put robolectric before android to fix java.lang.RuntimeException: Stub!-->
+
         <dependency>
-            <groupId>com.google.android</groupId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit4.version}</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.pivotallabs</groupId>
+            <artifactId>robolectric</artifactId>
+        </dependency>
+        <dependency>
+            <!-- https://github.com/mosabua/maven-android-sdk-deployer/ to fix Warning: an error occurred while binding shadow class -->
+            <!--<groupId>com.google.android</groupId>-->
+            <groupId>android</groupId>
             <artifactId>android</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.android.maps</groupId>
+            <artifactId>maps</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>
@@ -38,22 +63,6 @@
         </dependency>
 
         <!-- test support -->
-        <dependency>
-            <groupId>com.pivotallabs</groupId>
-            <artifactId>robolectric</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit4.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-core</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -204,6 +213,10 @@
                                     <classifier>release</classifier>
                                 </artifact>
                             </artifacts>
+                            <name/>
+                            <regex/>
+                            <replacement/>
+                            <value/>
                         </configuration>
                         <executions>
                             <execution>
